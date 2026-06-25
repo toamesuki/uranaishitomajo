@@ -1,0 +1,1606 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Featherlight Errors</title>
+
+  <style>
+    :root {
+      --bg: #11141a;
+      --paper: #eee5d4;
+      --paper-soft: #f7f0e3;
+      --ink: #292622;
+      --muted: #7e766a;
+      --line: #c8b99e;
+
+      --blue: #243242;
+      --blue-soft: #344a5f;
+      --gold: #c9a85d;
+      --gold-soft: #ead7a3;
+      --red: #7a2f3a;
+      --fog: #d8d6cc;
+
+      --shadow: rgba(10, 12, 18, 0.34);
+
+      --page-pattern: url("/assets/eli-mir/bg-page.png");
+      --panel-pattern: url("/assets/eli-mir/bg-panel.png");
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        var(--page-pattern),
+        radial-gradient(circle at 15% 0%, rgba(201, 168, 93, 0.18), transparent 28%),
+        radial-gradient(circle at 90% 15%, rgba(52, 74, 95, 0.28), transparent 30%),
+        linear-gradient(180deg, #1a202a 0%, #11141a 100%);
+      background-repeat: repeat, no-repeat, no-repeat, no-repeat;
+      font-family:
+        Georgia,
+        "Times New Roman",
+        "Yu Mincho",
+        "Hiragino Mincho ProN",
+        "Noto Serif JP",
+        serif;
+    }
+
+    a {
+      color: var(--blue-soft);
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: var(--red);
+      text-decoration: underline;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .manor-shell {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    .manor-frame {
+      min-height: 100vh;
+      background:
+        linear-gradient(rgba(247, 240, 227, 0.92), rgba(247, 240, 227, 0.94)),
+        var(--panel-pattern);
+      background-repeat: repeat;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .top-ribbon {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 48px;
+      background: #171920;
+      color: var(--paper-soft);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      border-bottom: 1px solid rgba(201, 168, 93, 0.34);
+    }
+
+    .top-ribbon a {
+      color: var(--gold-soft);
+    }
+
+    .top-ribbon a:hover {
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .hero {
+      min-height: 440px;
+      padding: 54px 64px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 390px;
+      gap: 34px;
+      align-items: end;
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(90deg, rgba(17, 20, 26, 0.82), rgba(17, 20, 26, 0.28)),
+        url("/assets/eli-mir/header-banner.png");
+      background-size: cover;
+      background-position: center;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        repeating-linear-gradient(
+          0deg,
+          rgba(255,255,255,0.045) 0 1px,
+          transparent 1px 7px
+        );
+      mix-blend-mode: screen;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 120px;
+      background: linear-gradient(transparent, rgba(17,20,26,0.38));
+      pointer-events: none;
+    }
+
+    .hero-titlebox {
+      position: relative;
+      z-index: 1;
+      width: min(850px, 100%);
+      padding: 30px;
+      border-radius: 24px;
+      border: 1px solid rgba(234, 215, 163, 0.42);
+      background: rgba(17, 20, 26, 0.72);
+      color: var(--paper-soft);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.28);
+      backdrop-filter: blur(5px);
+    }
+
+    .kicker {
+      color: var(--gold-soft);
+      font-size: 12px;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+    }
+
+    .hero-title {
+      margin: 10px 0 8px;
+      font-size: clamp(42px, 7vw, 78px);
+      font-weight: normal;
+      line-height: 0.95;
+      letter-spacing: 0.04em;
+    }
+
+    .hero-title small {
+      display: block;
+      margin-top: 12px;
+      color: #d9cfbd;
+      font-size: 16px;
+      letter-spacing: 0.22em;
+    }
+
+    .hero-text {
+      margin: 16px 0 0;
+      font-size: 15px;
+      line-height: 1.85;
+      color: #f4ecdd;
+    }
+
+    .hero-art-card {
+      position: relative;
+      z-index: 1;
+      align-self: stretch;
+      min-height: 290px;
+      border-radius: 24px;
+      border: 1px solid rgba(234, 215, 163, 0.38);
+      background:
+        linear-gradient(rgba(255,250,244,0.10), rgba(255,250,244,0.56)),
+        url("/assets/eli-mir/main-visual.png");
+      background-size: cover;
+      background-position: center;
+      box-shadow: 0 18px 38px rgba(0,0,0,0.26);
+    }
+
+    .hero-art-card::after {
+      content: "main visual / owl file";
+      position: absolute;
+      right: 12px;
+      bottom: 12px;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(247, 240, 227, 0.9);
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .manor-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 15px;
+      border-radius: 999px;
+      border: 1px solid var(--gold);
+      background: var(--gold);
+      color: #171920 !important;
+      font-size: 13px;
+    }
+
+    .manor-button:hover {
+      background: var(--gold-soft);
+      text-decoration: none;
+    }
+
+    .manor-button.secondary {
+      background: rgba(247, 240, 227, 0.94);
+      color: var(--blue) !important;
+    }
+
+    .manor-layout {
+      display: grid;
+      grid-template-columns: 285px minmax(620px, 1fr) 310px;
+      gap: 22px;
+      align-items: start;
+      padding: 30px 48px 58px;
+    }
+
+    .panel,
+    .main-card {
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(rgba(247, 240, 227, 0.96), rgba(247, 240, 227, 0.96)),
+        var(--panel-pattern);
+      background-repeat: repeat;
+      box-shadow: 0 10px 24px rgba(10, 12, 18, 0.16);
+    }
+
+    .panel {
+      position: sticky;
+      top: 16px;
+      padding: 16px;
+    }
+
+    .main-card {
+      padding: 24px;
+      overflow: hidden;
+    }
+
+    .panel-title {
+      margin: 0 0 14px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: #171920;
+      color: var(--paper-soft);
+      font-size: 14px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-weight: normal;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .panel-title::before {
+      content: "✦";
+      color: var(--gold);
+    }
+
+    .profile-icon {
+      width: 182px;
+      height: 182px;
+      margin: 4px auto 14px;
+      border-radius: 26px;
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(rgba(247,240,227,0.05), rgba(247,240,227,0.16)),
+        url("/assets/eli-mir/profile-icon.png");
+      background-size: cover;
+      background-position: center;
+      box-shadow: 0 12px 22px rgba(10,12,18,0.18);
+    }
+
+    .name-plate {
+      margin-bottom: 14px;
+      padding: 12px;
+      border-radius: 16px;
+      border: 1px dashed var(--line);
+      background: rgba(238, 229, 212, 0.78);
+      text-align: center;
+    }
+
+    .name-plate strong {
+      display: block;
+      color: var(--blue);
+      font-size: 18px;
+      letter-spacing: 0.08em;
+    }
+
+    .name-plate span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .category-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .category-list a {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: #fffaf0;
+      color: var(--ink);
+      font-size: 13px;
+      transition: 0.16s ease;
+    }
+
+    .category-list a:hover {
+      transform: translateX(2px);
+      background: #ece0ca;
+      color: var(--blue);
+      text-decoration: none;
+    }
+
+    .category-list em {
+      color: var(--muted);
+      font-size: 11px;
+      font-style: normal;
+    }
+
+    .mini-note {
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(200, 185, 158, 0.78);
+      background: #eee5d4;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .tiny-banner {
+      margin-top: 14px;
+      overflow: hidden;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .tiny-banner img {
+      width: 100%;
+      height: 72px;
+      object-fit: cover;
+    }
+
+    .clap-button {
+      display: block;
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--blue);
+      background: var(--blue);
+      color: var(--paper-soft) !important;
+      text-align: center;
+      font-size: 12px;
+    }
+
+    .clap-button:hover {
+      background: var(--blue-soft);
+      text-decoration: none;
+    }
+
+    .section {
+      margin-bottom: 24px;
+    }
+
+    .section:last-child {
+      margin-bottom: 0;
+    }
+
+    .section h2 {
+      margin: 0 0 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--line);
+      color: var(--blue);
+      font-size: 20px;
+      letter-spacing: 0.08em;
+      font-weight: normal;
+    }
+
+    .section p {
+      margin: 0 0 12px;
+      font-size: 14px;
+      line-height: 1.85;
+    }
+
+    .ticker {
+      overflow: hidden;
+      margin-bottom: 18px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: #fffaf0;
+    }
+
+    .ticker span {
+      display: inline-block;
+      white-space: nowrap;
+      padding: 8px 0;
+      color: var(--muted);
+      font-size: 12px;
+      animation: tickerMove 24s linear infinite;
+    }
+
+    @keyframes tickerMove {
+      from { transform: translateX(100%); }
+      to { transform: translateX(-100%); }
+    }
+
+    .notice-box {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(260px, 0.7fr);
+      gap: 16px;
+    }
+
+    .notice-copy {
+      padding: 18px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(255, 250, 240, 0.68);
+    }
+
+    .stamp-card {
+      min-height: 240px;
+      padding: 12px;
+      display: flex;
+      align-items: end;
+      border-radius: 18px;
+      border: 1px dashed var(--line);
+      background:
+        linear-gradient(rgba(247,240,227,0.18), rgba(247,240,227,0.86)),
+        url("/assets/eli-mir/banner-main.png");
+      background-size: cover;
+      background-position: center;
+    }
+
+    .stamp-card span {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(247,240,227,0.92);
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .archive-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(230px, 1fr));
+      gap: 14px;
+    }
+
+    .archive-card {
+      position: relative;
+      min-height: 118px;
+      padding: 16px;
+      overflow: hidden;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: #fffaf0;
+      color: var(--ink);
+    }
+
+    a.archive-card:hover {
+      text-decoration: none;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 16px rgba(10,12,18,0.13);
+    }
+
+    .archive-card::after {
+      content: "";
+      position: absolute;
+      right: -26px;
+      bottom: -26px;
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      background: rgba(52, 74, 95, 0.10);
+    }
+
+    .archive-card strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--blue);
+    }
+
+    .archive-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.65;
+    }
+
+    .gallery-strip {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr;
+      gap: 14px;
+    }
+
+    .gallery-item {
+      position: relative;
+      min-height: 220px;
+      overflow: hidden;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background-size: cover;
+      background-position: center;
+    }
+
+    .gallery-item:nth-child(1) {
+      background-image:
+        linear-gradient(rgba(247,240,227,0.06), rgba(17,20,26,0.38)),
+        url("/assets/eli-mir/gallery-1.png");
+    }
+
+    .gallery-item:nth-child(2) {
+      background-image:
+        linear-gradient(rgba(247,240,227,0.06), rgba(17,20,26,0.38)),
+        url("/assets/eli-mir/gallery-2.png");
+    }
+
+    .gallery-item:nth-child(3) {
+      background-image:
+        linear-gradient(rgba(247,240,227,0.06), rgba(17,20,26,0.38)),
+        url("/assets/eli-mir/gallery-3.png");
+    }
+
+    .gallery-item span {
+      position: absolute;
+      left: 10px;
+      bottom: 10px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(247,240,227,0.92);
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .rules-box {
+      border-radius: 18px;
+      border: 1px solid rgba(52, 74, 95, 0.36);
+      background: #f7efe1;
+      overflow: hidden;
+      font-size: 13px;
+      line-height: 1.75;
+    }
+
+    .rules-head {
+      padding: 12px 16px;
+      background: rgba(52, 74, 95, 0.14);
+      border-bottom: 1px solid rgba(52, 74, 95, 0.22);
+      color: var(--blue);
+      letter-spacing: 0.08em;
+    }
+
+    .rules-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .rules-lang {
+      padding: 16px;
+    }
+
+    .rules-lang:first-child {
+      border-right: 1px dashed rgba(52, 74, 95, 0.25);
+    }
+
+    .rules-lang h3 {
+      margin: 0 0 10px;
+      color: var(--blue);
+      font-size: 15px;
+      letter-spacing: 0.08em;
+      font-weight: normal;
+    }
+
+    .rules-lang ol {
+      margin: 0 0 0 20px;
+      padding: 0;
+    }
+
+    .rules-lang li {
+      margin-bottom: 8px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: #fffaf0;
+      color: var(--ink);
+      font-family: inherit;
+    }
+
+    .search-help {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    .cipher-box {
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      overflow: hidden;
+      background:
+        linear-gradient(rgba(255,250,240,0.9), rgba(255,250,240,0.96)),
+        repeating-linear-gradient(
+          0deg,
+          rgba(17,20,26,0.04) 0 1px,
+          transparent 1px 5px
+        );
+    }
+
+    .cipher-head {
+      padding: 10px;
+      background: #171920;
+      color: var(--paper-soft);
+      text-align: center;
+      letter-spacing: 0.14em;
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    .cipher-body {
+      padding: 12px;
+    }
+
+    .cipher-label {
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 7px;
+    }
+
+    .cipher-bar {
+      width: 100%;
+      height: 14px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: #e7ddc9;
+      overflow: hidden;
+    }
+
+    .cipher-fill {
+      height: 100%;
+      width: 62%;
+      background:
+        linear-gradient(90deg, var(--blue), var(--gold));
+      animation: cipherPulse 2.8s ease-in-out infinite;
+    }
+
+    @keyframes cipherPulse {
+      0%, 100% { filter: brightness(1); }
+      50% { filter: brightness(1.22); }
+    }
+
+    .manor-calendar {
+      margin-top: 12px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      overflow: hidden;
+      background: #fffaf0;
+    }
+
+    .manor-calendar-top {
+      padding: 10px;
+      background: linear-gradient(90deg, #171920, #243242);
+      color: var(--paper-soft);
+      text-align: center;
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .manor-calendar-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 10px;
+      background: rgba(238, 229, 212, 0.85);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .manor-calendar-controls button {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fffaf0;
+      color: var(--blue);
+      font-family: inherit;
+      font-size: 11px;
+      padding: 5px 9px;
+      cursor: pointer;
+    }
+
+    .manor-calendar-controls button:hover {
+      background: #ece0ca;
+    }
+
+    .manor-month {
+      color: var(--blue);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+    }
+
+    .manor-weekdays,
+    .manor-days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+    }
+
+    .manor-weekdays div {
+      padding: 7px 2px;
+      background: #eee5d4;
+      color: var(--blue);
+      font-size: 11px;
+      font-weight: bold;
+      border-right: 1px solid #e1d4bf;
+      border-bottom: 1px solid #e1d4bf;
+    }
+
+    .manor-day {
+      min-height: 36px;
+      padding: 5px 3px;
+      border-right: 1px solid #eadfca;
+      border-bottom: 1px solid #eadfca;
+      font-size: 11px;
+      background: rgba(255,250,240,0.76);
+    }
+
+    .manor-day:nth-child(7n),
+    .manor-weekdays div:nth-child(7n) {
+      border-right: 0;
+    }
+
+    .manor-day.is-empty {
+      background: rgba(238,229,212,0.42);
+    }
+
+    .manor-day-number {
+      display: block;
+      color: var(--ink);
+    }
+
+    .manor-day-icon {
+      display: block;
+      margin-top: 2px;
+      font-size: 12px;
+      opacity: 0.88;
+    }
+
+    .manor-day.is-today {
+      background: rgba(201,168,93,0.22);
+      box-shadow: inset 0 0 0 1px rgba(201,168,93,0.7);
+    }
+
+    .manor-day.is-owl {
+      background: rgba(52,74,95,0.15);
+    }
+
+    .manor-day.is-fog {
+      background: rgba(122,47,58,0.12);
+    }
+
+    .broadcast {
+      margin-top: 10px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(rgba(17,20,26,0.9), rgba(17,20,26,0.94)),
+        repeating-linear-gradient(
+          0deg,
+          rgba(255,255,255,0.06) 0 1px,
+          transparent 1px 6px
+        );
+      color: var(--paper-soft);
+      overflow: hidden;
+    }
+
+    .broadcast-title {
+      padding: 8px 10px;
+      border-bottom: 1px solid rgba(234,215,163,0.22);
+      color: var(--gold-soft);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .broadcast-body {
+      padding: 11px 12px;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .broadcast-body strong {
+      color: var(--gold-soft);
+    }
+
+    .broadcast-small {
+      display: block;
+      margin-top: 7px;
+      color: rgba(247,240,227,0.72);
+      font-size: 11px;
+    }
+
+    .legend {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    .audio-box {
+      padding: 12px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: #fffaf0;
+    }
+
+    .audio-box audio,
+    .video-box video {
+      width: 100%;
+    }
+
+    .track-title {
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .video-box {
+      overflow: hidden;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: #fffaf0;
+    }
+
+    .video-box video {
+      display: block;
+      background: #171920;
+    }
+
+    .video-caption {
+      padding: 9px 10px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    .image-links {
+      display: grid;
+      gap: 9px;
+    }
+
+    .image-link {
+      display: block;
+      overflow: hidden;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: #fffaf0;
+    }
+
+    .image-link img {
+      width: 100%;
+      height: 56px;
+      object-fit: cover;
+    }
+
+    .footer {
+      padding: 20px 20px 24px;
+      border-top: 1px solid var(--line);
+      background: rgba(238,229,212,0.86);
+      color: var(--muted);
+      text-align: center;
+      font-size: 12px;
+    }
+
+    .empty-result {
+      display: none;
+      margin-top: 10px;
+      color: var(--red);
+      font-size: 12px;
+    }
+
+    .is-hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 1240px) {
+      .manor-layout {
+        grid-template-columns: 270px minmax(0, 1fr);
+      }
+
+      .right-panel {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .right-panel .panel-title {
+        grid-column: 1 / -1;
+      }
+
+      .panel {
+        position: relative;
+        top: auto;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .top-ribbon {
+        padding: 10px 18px;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+        padding: 28px 18px;
+      }
+
+      .hero-art-card {
+        min-height: 230px;
+      }
+
+      .manor-layout {
+        grid-template-columns: 1fr;
+        padding: 16px;
+      }
+
+      .right-panel {
+        display: block;
+      }
+
+      .notice-box,
+      .archive-grid,
+      .gallery-strip,
+      .rules-inner {
+        grid-template-columns: 1fr;
+      }
+
+      .rules-lang:first-child {
+        border-right: 0;
+        border-bottom: 1px dashed rgba(52,74,95,0.25);
+      }
+    }
+
+    @media (max-width: 560px) {
+      .top-ribbon {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 9px 12px;
+      }
+
+      .hero {
+        min-height: auto;
+        padding: 16px;
+      }
+
+      .hero-titlebox {
+        padding: 18px;
+      }
+
+      .hero-title {
+        font-size: 40px;
+      }
+
+      .hero-title small {
+        font-size: 12px;
+      }
+
+      .manor-layout {
+        gap: 12px;
+        padding: 12px;
+      }
+
+      .main-card,
+      .panel {
+        padding: 12px;
+        border-radius: 16px;
+      }
+
+      .ticker span {
+        animation-duration: 16s;
+      }
+    }
+  </style>
+
+</head>
+
+<body>
+  <div class="manor-shell">
+    <div class="manor-frame">
+
+```
+  <div class="top-ribbon">
+    <div>FEATHERLIGHT ERRORS　/　Identity V yume archive</div>
+    <div>
+      <a href="/eli-mir/notice/">notice</a> ·
+      <a href="/eli-mir/channel/">link</a> ·
+      <a href="#rules">rules</a>
+    </div>
+  </div>
+
+  <header class="hero">
+    <div class="hero-titlebox">
+      <div class="kicker">manor file / owl signal / cipher memory</div>
+
+      <h1 class="hero-title">
+        Featherlight Errors
+        <small>Eli Clark × Mir</small>
+      </h1>
+
+      <p class="hero-text">
+        Identity V themed personal yume archive.  
+        Eli/Mir notes, route fragments, writing logs, image records, commission references, and manor-like backup files.
+      </p>
+
+      <div class="button-row">
+        <a class="manor-button" href="/eli-mir/profile/">profile</a>
+        <a class="manor-button secondary" href="/eli-mir/text/">text archive</a>
+        <a class="manor-button secondary" href="/eli-mir/image/">gallery</a>
+        <a class="manor-button secondary" href="/eli-mir/channel/">channel</a>
+      </div>
+    </div>
+
+    <div class="hero-art-card"></div>
+  </header>
+
+  <div class="manor-layout">
+
+    <aside class="panel left-panel">
+      <h2 class="panel-title">case file</h2>
+
+      <div class="profile-icon"></div>
+
+      <div class="name-plate">
+        <strong>Eli Clark × Mir</strong>
+        <span>Featherlight Errors / yume archive</span>
+      </div>
+
+      <nav class="category-list">
+        <a href="/eli-mir/notice/">notice <em>intro</em></a>
+        <a href="/eli-mir/profile/">profile <em>characters</em></a>
+        <a href="/eli-mir/image/">image <em>gallery</em></a>
+        <a href="/eli-mir/text/">text <em>writing</em></a>
+        <a href="/eli-mir/diary/">diary <em>logs</em></a>
+        <a href="/eli-mir/backup/">backup <em>files</em></a>
+        <a href="/eli-mir/channel/">channel <em>links</em></a>
+      </nav>
+
+      <div class="mini-note">
+        <strong>manor memo</strong><br>
+        Personal yume / OC archive.<br>
+        Themes: owl, cipher, fog, soft horror, esports, quiet dependency, domestic logs.
+      </div>
+
+      <div class="tiny-banner">
+        <img src="/assets/eli-mir/banner-small.png" alt="small banner">
+      </div>
+
+      <a class="clap-button" href="/eli-mir/channel/">guestbook / banner exchange</a>
+    </aside>
+
+    <main class="main-card">
+
+      <div class="ticker">
+        <span>
+          ♪ manor signal connected　—　do not repost / do not use for AI training　—　profile, image, text, diary, backup, channel　　
+        </span>
+      </div>
+
+      <section class="section">
+        <h2>notice</h2>
+
+        <div class="notice-box">
+          <div class="notice-copy">
+            <p>
+              This is a personal archive for <strong>Eli Clark × Mir</strong>, centered on Identity V themed yume writing, relationship notes, commissioned artwork records, route fragments, and backup materials.
+            </p>
+
+            <p>
+              The archive uses a manor / cipher / owl aesthetic. It is unofficial, non-commercial, and made only for personal organization and viewing.
+            </p>
+
+            <p>
+              Please do not repost, reuse, edit, trace, redistribute, or feed any writing, images, OC notes, or commission materials into AI systems.
+            </p>
+          </div>
+
+          <div class="stamp-card">
+            <span>/assets/eli-mir/banner-main.png</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>archive menu</h2>
+
+        <div class="archive-grid">
+          <a class="archive-card searchable" href="/eli-mir/profile/" data-search="profile eli mir relationship identity v owl">
+            <strong>profile</strong>
+            <p>Eli, Mir, relationship summary, route setting, symbols, and personality notes.</p>
+          </a>
+
+          <a class="archive-card searchable" href="/eli-mir/image/" data-search="image gallery commission art reference outfit">
+            <strong>image</strong>
+            <p>Commission gallery, icons, banners, reference sheets, artist credits, and visual archive.</p>
+          </a>
+
+          <a class="archive-card searchable" href="/eli-mir/text/" data-search="text writing scene featherlight errors chapter domestic zappy">
+            <strong>text</strong>
+            <p>Writing archive, scenes, headcanons, chapter notes, route fragments, and soft-dark moments.</p>
+          </a>
+
+          <a class="archive-card searchable" href="/eli-mir/backup/" data-search="backup old drafts request skeb notes">
+            <strong>backup</strong>
+            <p>Old drafts, unused ideas, request text, translation notes, and private worldbuilding scraps.</p>
+          </a>
+        </div>
+
+        <div id="emptyResult" class="empty-result">
+          No matching item on this homepage.
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>image preview</h2>
+
+        <div class="gallery-strip">
+          <a class="gallery-item" href="/eli-mir/image/">
+            <span>gallery-1.png</span>
+          </a>
+
+          <a class="gallery-item" href="/eli-mir/image/">
+            <span>gallery-2.png</span>
+          </a>
+
+          <a class="gallery-item" href="/eli-mir/image/">
+            <span>gallery-3.png</span>
+          </a>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>updates</h2>
+
+        <div class="archive-grid">
+          <div class="archive-card searchable" data-search="2026 site opened update">
+            <strong>2026.06</strong>
+            <p>Eli/Mir manor archive opened. Layout preparing. Gallery and writing index will be added later.</p>
+          </div>
+
+          <div class="archive-card searchable" data-search="todo profile gallery writing cipher banner">
+            <strong>todo</strong>
+            <p>Add profile files, cipher-themed writing list, commission credits, banner exchange, and official links.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="rules">
+        <h2>site rules</h2>
+
+        <div class="rules-box">
+          <div class="rules-head">
+            Please read before browsing.
+          </div>
+
+          <div class="rules-inner">
+            <div class="rules-lang">
+              <h3>English</h3>
+              <ol>
+                <li>All writing, images, character notes, and request materials are for personal viewing and archiving only.</li>
+                <li>Do not repost, reupload, copy, trace, edit, redistribute, or claim anything as your own.</li>
+                <li>Do not use my OC designs, writing, relationship notes, or commissioned artworks.</li>
+                <li>Do not feed, scrape, train, reference, or use any content from this site for AI generation, AI datasets, AI model training, or AI prompts.</li>
+                <li>Commissioned artworks belong to their respective artists. Please follow each artist’s own rules as well.</li>
+                <li>This is an unofficial, non-commercial personal fan/yume archive and is not affiliated with the official creators, companies, or rights holders.</li>
+              </ol>
+            </div>
+
+            <div class="rules-lang">
+              <h3>日本語</h3>
+              <ol>
+                <li>当サイト内の文章・画像・キャラクター設定・依頼資料はすべて個人観賞用です。</li>
+                <li>無断転載、無断使用、加工、トレス、自作発言、再配布を禁止します。</li>
+                <li>OC設定、文章、関係性メモ、依頼イラストを第三者が使用することを禁止します。</li>
+                <li>AI学習、AI生成、AIデータセット、AIプロンプトへの利用を禁止します。</li>
+                <li>依頼イラストの著作権は各イラストレーター様に帰属します。各作家様の規約も必ずご確認ください。</li>
+                <li>当サイトは非公式・非営利の個人夢創作サイトです。公式作品・企業・権利者とは関係ありません。</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <aside class="panel right-panel">
+      <h2 class="panel-title">manor tools</h2>
+
+      <section class="section">
+        <h2>search</h2>
+
+        <input id="routeSearch" class="search-input" type="search" placeholder="search: profile, text, owl, zappy...">
+
+        <p class="search-help">
+          This search filters homepage cards only. Later, this can become full-site search.
+        </p>
+      </section>
+
+      <section class="section">
+        <h2>cipher</h2>
+
+        <div class="cipher-box">
+          <div class="cipher-head">cipher progress</div>
+          <div class="cipher-body">
+            <div class="cipher-label">
+              <span>decoding route file</span>
+              <span id="cipherPercent">62%</span>
+            </div>
+            <div class="cipher-bar">
+              <div class="cipher-fill" id="cipherFill"></div>
+            </div>
+            <p class="search-help">
+              Status changes automatically by date.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>calendar</h2>
+
+        <div class="manor-calendar">
+          <div class="manor-calendar-top">
+            manor event calendar
+          </div>
+
+          <div class="manor-calendar-controls">
+            <button type="button" id="prevMonth">prev</button>
+            <div class="manor-month" id="calendarMonthLabel">loading...</div>
+            <button type="button" id="nextMonth">next</button>
+          </div>
+
+          <div class="manor-weekdays">
+            <div>MON</div>
+            <div>TUE</div>
+            <div>WED</div>
+            <div>THU</div>
+            <div>FRI</div>
+            <div>SAT</div>
+            <div>SUN</div>
+          </div>
+
+          <div class="manor-days" id="manorCalendarDays"></div>
+        </div>
+
+        <div class="broadcast">
+          <div class="broadcast-title">
+            manor broadcast
+          </div>
+
+          <div class="broadcast-body" id="manorBroadcast">
+            Loading broadcast...
+          </div>
+        </div>
+
+        <div class="legend">
+          🦉 owl　⌘ cipher　☁ fog　✦ manor event　⚠ unstable signal
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>music</h2>
+
+        <div class="audio-box">
+          <div class="track-title">
+            ♪ manor bgm / replace with your permitted audio file
+          </div>
+
+          <audio controls preload="metadata" controlslist="nodownload">
+            <source src="/assets/eli-mir/audio/bgm.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+          </audio>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>video</h2>
+
+        <div class="video-box">
+          <video controls preload="metadata" poster="/assets/eli-mir/video-poster.png">
+            <source src="/assets/eli-mir/video/preview.mp4" type="video/mp4">
+            Your browser does not support the video element.
+          </video>
+
+          <div class="video-caption">
+            Put a trailer, PV, edit, or commission showcase here.
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>official / links</h2>
+
+        <div class="image-links">
+          <a class="image-link" href="https://www.identityvgame.com/" target="_blank" rel="noopener">
+            <img src="/assets/eli-mir/link-official-1.png" alt="official link 1">
+          </a>
+
+          <a class="image-link" href="/eli-mir/channel/">
+            <img src="/assets/eli-mir/link-official-2.png" alt="link 2">
+          </a>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>banner</h2>
+
+        <div class="mini-note">
+          Banner exchange welcome.<br>
+          Eli/Mir manor archive button will go here.
+        </div>
+      </section>
+    </aside>
+
+  </div>
+
+  <footer class="footer">
+    Featherlight Errors © personal Eli/Mir yume archive. Do not repost, copy, trace, edit, redistribute, or use for AI training.
+  </footer>
+
+</div>
+```
+
+  </div>
+
+  <script>
+    const routeSearch = document.getElementById("routeSearch");
+    const searchableCards = document.querySelectorAll(".searchable");
+    const emptyResult = document.getElementById("emptyResult");
+
+    if (routeSearch) {
+      routeSearch.addEventListener("input", function () {
+        const query = routeSearch.value.toLowerCase().trim();
+        let visibleCount = 0;
+
+        searchableCards.forEach(function (card) {
+          const text = (card.textContent + " " + (card.dataset.search || "")).toLowerCase();
+          const shouldShow = text.includes(query);
+
+          card.classList.toggle("is-hidden", !shouldShow);
+
+          if (shouldShow) {
+            visibleCount++;
+          }
+        });
+
+        if (emptyResult) {
+          emptyResult.style.display = visibleCount === 0 ? "block" : "none";
+        }
+      });
+    }
+
+    const calendarDays = document.getElementById("manorCalendarDays");
+    const calendarMonthLabel = document.getElementById("calendarMonthLabel");
+    const prevMonthBtn = document.getElementById("prevMonth");
+    const nextMonthBtn = document.getElementById("nextMonth");
+    const manorBroadcast = document.getElementById("manorBroadcast");
+    const cipherFill = document.getElementById("cipherFill");
+    const cipherPercent = document.getElementById("cipherPercent");
+
+    let calendarDate = new Date();
+
+    const monthNames = [
+      "JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE",
+      "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"
+    ];
+
+    function seededManorEvent(year, month, day) {
+      const seed = year * 10000 + (month + 1) * 100 + day;
+      const value = (seed * 9301 + 49297) % 233280;
+      const roll = value / 233280;
+
+      if (roll < 0.12) {
+        return {
+          type: "unstable",
+          icon: "⚠",
+          className: "is-fog",
+          label: "Unstable signal"
+        };
+      }
+
+      if (roll < 0.30) {
+        return {
+          type: "owl",
+          icon: "🦉",
+          className: "is-owl",
+          label: "Owl protection available"
+        };
+      }
+
+      if (roll < 0.52) {
+        return {
+          type: "cipher",
+          icon: "⌘",
+          className: "",
+          label: "Cipher decoding"
+        };
+      }
+
+      if (roll < 0.76) {
+        return {
+          type: "fog",
+          icon: "☁",
+          className: "is-fog",
+          label: "Fog over the manor"
+        };
+      }
+
+      return {
+        type: "manor",
+        icon: "✦",
+        className: "",
+        label: "Quiet manor day"
+      };
+    }
+
+    function renderCalendar() {
+      if (!calendarDays || !calendarMonthLabel) return;
+
+      const year = calendarDate.getFullYear();
+      const month = calendarDate.getMonth();
+
+      calendarMonthLabel.textContent = `${monthNames[month]} ${year}`;
+      calendarDays.innerHTML = "";
+
+      const firstDay = new Date(year, month, 1);
+      const lastDay = new Date(year, month + 1, 0);
+      const today = new Date();
+
+      let startOffset = firstDay.getDay() - 1;
+      if (startOffset < 0) startOffset = 6;
+
+      for (let i = 0; i < startOffset; i++) {
+        const emptyCell = document.createElement("div");
+        emptyCell.className = "manor-day is-empty";
+        calendarDays.appendChild(emptyCell);
+      }
+
+      for (let day = 1; day <= lastDay.getDate(); day++) {
+        const event = seededManorEvent(year, month, day);
+        const dayCell = document.createElement("div");
+
+        dayCell.className = `manor-day ${event.className}`;
+
+        const isToday =
+          day === today.getDate() &&
+          month === today.getMonth() &&
+          year === today.getFullYear();
+
+        if (isToday) {
+          dayCell.classList.add("is-today");
+        }
+
+        dayCell.innerHTML = `
+          <span class="manor-day-number">${day}</span>
+          <span class="manor-day-icon">${event.icon}</span>
+        `;
+
+        dayCell.title = event.label;
+        calendarDays.appendChild(dayCell);
+      }
+
+      renderBroadcast();
+      renderCipher();
+    }
+
+    function renderBroadcast() {
+      if (!manorBroadcast) return;
+
+      const today = new Date();
+      const event = seededManorEvent(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate()
+      );
+
+      const broadcastLines = {
+        unstable: {
+          title: "Unstable signal",
+          text: "The manor line is distorted tonight. Do not trust every notification."
+        },
+        owl: {
+          title: "Owl protection active",
+          text: "A quiet wingbeat has been detected near the archive. Someone is watching over the route."
+        },
+        cipher: {
+          title: "Cipher decoding",
+          text: "The current file is still being decoded. Please wait until the progress reaches a safer value."
+        },
+        fog: {
+          title: "Fog condition",
+          text: "The corridor is unclear. Stay close to the person who knows the way back."
+        },
+        manor: {
+          title: "Quiet manor day",
+          text: "No abnormal signal has been confirmed. The archive is stable for now."
+        }
+      };
+
+      const line = broadcastLines[event.type];
+
+      manorBroadcast.innerHTML = `
+        <strong>${event.icon} ${line.title}</strong><br>
+        ${line.text}
+        <span class="broadcast-small">
+          today: ${today.getFullYear()}.${String(today.getMonth() + 1).padStart(2, "0")}.${String(today.getDate()).padStart(2, "0")}
+          / generated manor forecast
+        </span>
+      `;
+    }
+
+    function renderCipher() {
+      if (!cipherFill || !cipherPercent) return;
+
+      const today = new Date();
+      const base = today.getFullYear() + today.getMonth() + today.getDate();
+      const percent = 35 + (base * 7) % 58;
+
+      cipherFill.style.width = `${percent}%`;
+      cipherPercent.textContent = `${percent}%`;
+    }
+
+    if (prevMonthBtn) {
+      prevMonthBtn.addEventListener("click", function () {
+        calendarDate.setMonth(calendarDate.getMonth() - 1);
+        renderCalendar();
+      });
+    }
+
+    if (nextMonthBtn) {
+      nextMonthBtn.addEventListener("click", function () {
+        calendarDate.setMonth(calendarDate.getMonth() + 1);
+        renderCalendar();
+      });
+    }
+
+    renderCalendar();
+  </script>
+
+</body>
+</html>
